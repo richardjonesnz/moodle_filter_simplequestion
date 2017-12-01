@@ -37,7 +37,7 @@ defined('MOODLE_INTERNAL') || die();
 class urls  {
     /**
      * The the URL to use for actions relating to this preview.
-     * @param int $enid the encrypted id of the question being previewed.
+     * @param string $enid the encrypted id of the question being previewed.
      * @param string $popup the question display option.
      * @param int $qubaid the id of the question usage for this preview.
      * @param question_preview_options $options the options in use.
@@ -54,32 +54,27 @@ class urls  {
      }
      /**
       * Generate the URL for starting a new preview of a given question with the given options.
-      * @param integer $questionid the question to preview.
+      * @param string encrypted $questionid the question to preview.
       * @param string $popup the question display option.
       * @param string $preferredbehaviour the behaviour to use for the preview.
       * @param float $maxmark the maximum to mark the question out of.
       * @param question_display_options $displayoptions the display options to use.
       * @param int $variant the variant of the question to preview. 
       *         If null, one will be picked randomly.
-      * @param object $context context to run the preview in (affects things like
-      *         filter settings, theme, lang, etc.) Defaults to $PAGE->context.
+      * @param integer $courseid course to run the preview within.
       * @return moodle_url the URL.
       */
      public static function preview_url($enid, $popup,
              $preferredbehaviour = null,
              $maxmark = null, $displayoptions = null,
              $variant = null, $courseid) {
-
          $params = array('id' => $enid, 'courseid' => $courseid);
-
          if (!is_null($preferredbehaviour)) {
              $params['behaviour'] = $preferredbehaviour;
          }
-
          if (!is_null($maxmark)) {
              $params['maxmark'] = $maxmark;
          }
-
          if (!is_null($displayoptions)) {
              $params['correctness']     = $displayoptions->correctness;
              $params['marks']           = $displayoptions->marks;
@@ -88,11 +83,9 @@ class urls  {
              $params['generalfeedback'] = (bool) $displayoptions->generalfeedback;
              $params['rightanswer']     = (bool) $displayoptions->rightanswer;
          }
-
          if ($variant) {
              $params['variant'] = $variant;
          }
-
          return new moodle_url('/filter/simplequestion/preview.php', $params);
     }
 }

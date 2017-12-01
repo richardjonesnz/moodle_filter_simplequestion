@@ -1,13 +1,15 @@
 /* css file for simplequestion */
+.filter_simplequestion_container {
+  display: none;
+  padding: 10px;
+  margin: 5px;
+}
+
 .filter_simplequestion_controls {
     padding: 8px 35px 8px 14px;
     margin-bottom: 20px;
     background-color: #006;
     color: #FF6;
-}
-
-.filter_simplequestion_buttoncontainer {
-    display:inline-block;
 }
 
 .filter_simplequestion_controls a:link,
@@ -22,6 +24,7 @@
 .filter_simplequestion_error {
    color:#FF0000;
 }
+
 /* Hide the question info block and the breadcrumbs */
 #q1 .info { display:none; }
 #page-filter-simplequestion-preview .breadcrumb { display:none; }

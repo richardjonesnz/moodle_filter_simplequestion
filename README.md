@@ -28,7 +28,7 @@ the original id number is not displayed by preview.php.
 
 Version
 =======
-1.5.2 still in beta testing, help welcome.
+1.5.3 still in beta testing, help welcome.
 
 Configuration
 =============
