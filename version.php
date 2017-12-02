@@ -27,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->version   = 2017120202;         
-$plugin->requires  = 2017042100;   // Moodle 3.1 or greater     
+$plugin->requires  = 2016052300;   // tested on Moodle 3.1-3.4 only     
 $plugin->component = 'filter_simplequestion';
 $plugin->maturity = MATURITY_BETA;
 $plugin->release = 'v1.5.3'; // Changed panel sliding to fire js script

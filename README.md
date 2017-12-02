@@ -41,8 +41,10 @@ and spaces.
 
 Documentation
 =================
-Documentation and screenshots at https://open-learning.co.nz/course/view.php?id=16
-Guest login permitted.
+Documentation and screenshots at https://open-learning.co.nz/
+*Select "Open courses" icon on front page
+*Click "Simple Question Demonstration"
+*Login as guest
 
 Known bugs, Todos
 =================
