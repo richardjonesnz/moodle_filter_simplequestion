@@ -26,18 +26,18 @@
  *
  * Modifed by Richard Jones, https://richardnz.net
  *
- * https://stackoverflow.com/questions/24350891/how-to-encrypt-decrypt-an-integer-in-php 
+ * https://stackoverflow.com/questions/24350891/how-to-encrypt-decrypt-an-integer-in-php
  *
  */
 
 namespace filter_simplequestion\utility;
 
 defined('MOODLE_INTERNAL') || die();
-/** 
+/**
  * Functions to encrypt and decrypt an integer
  */
 class tools  {
-    /** 
+    /**
      * Encrypt an integer using a simple key of alphabetical characters.
      * The encoded number must be alphabetical since it is going to be used in a css id.
      * It also has to begin with a letter for some browsers
@@ -47,20 +47,20 @@ class tools  {
      */
     public static function encrypt($string, $key) {
         $result = '';
-        for($i = 0; $i < strlen($string); $i++) {
+        for ($i = 0; $i < strlen($string); $i++) {
             $char = substr($string, $i, 1);
             $keychar = substr($key, ($i % strlen($key)) - 1, 1);
             $char = chr(ord($char) + ord($keychar));
             $result .= $char;
         }
         $result = base64_encode($result);
-        // Replace characters not permitted in css id's
+        // Replace characters not permitted in css id's.
         $r1 = str_replace('=', '_', $result);
         $r2 = str_replace('+', '__', $r1);
-        $r3 = str_replace('/', '-', $r2);    
+        $r3 = str_replace('/', '-', $r2);
         return substr($key, 0, 1) . $r3;
     }
-    /** 
+    /**
      * Decrypt an integer using a simple key of alphabetical characters.
      * @param string $string code to be decrypted
      * @param string $key the string of alphabetic characters used to encode the numer
@@ -72,10 +72,10 @@ class tools  {
         // Put back characters removed during encrypt.
         $s1 = str_replace('_', '=', $newstring);
         $s2 = str_replace('__', '+', $s1);
-        $s3 = str_replace('-', '/', $s2);    
+        $s3 = str_replace('-', '/', $s2);
         $s4 = base64_decode($s3);
 
-        for($i = 0; $i < strlen($s4); $i++) {
+        for ($i = 0; $i < strlen($s4); $i++) {
             $char = substr($s4, $i, 1);
             $keychar = substr($key, ($i % strlen($key)) - 1, 1);
             $char = chr(ord($char) - ord($keychar));

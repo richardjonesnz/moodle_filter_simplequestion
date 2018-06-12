@@ -1,4 +1,4 @@
-/* css file for simplequestion */
+/* Css file for simplequestion. */
 .filter_simplequestion_container {
   display: none;
   padding: 10px;
@@ -25,6 +25,6 @@
    color:#FF0000;
 }
 
-/* Hide the question info block and the breadcrumbs */
+/* Hide the question info block and the breadcrumbs. */
 #q1 .info { display:none; }
 #page-filter-simplequestion-preview .breadcrumb { display:none; }

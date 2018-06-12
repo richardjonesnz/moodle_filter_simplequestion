@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Library functions used by question/preview.php. 
+ * Library functions used by question/preview.php.
  * From previewlib.php and re-written for this filter
  *
  * @package    filter
@@ -26,11 +26,11 @@
  */
 namespace filter_simplequestion;
 defined('MOODLE_INTERNAL') || die();
-/** 
+/**
  * Control question display options
  */
 class displayoptions  {
-    /** 
+    /**
      * Set the display options for a question
      * @param int $maxvariant The maximum number of variants previewable.
      * @return array $options the display options
@@ -38,18 +38,18 @@ class displayoptions  {
     public static function get_options($maxvariant) {
 
         $options = array();
-        // Question options - note just 1 question in the attempt
+        // Question options - note just 1 question in the attempt.
         $options = new question_display_options();
         $options->marks = question_display_options::MAX_ONLY;
-        $options->markdp = 0; // Display marks to 2 decimal places.
+        $options->markdp = 0;
         $options->feedback = 'immediatefeedback';
         $options->generalfeedback = question_display_options::HIDDEN;
         $options->variant = $maxvariant;
         if ($options->variant) {
             $options->variant = min($maxvariant, max(1, $options->variant));
-        }  else {
+        } else {
             $options->variant = rand(1, $maxvariant);
-        } 
+        }
         return $options;
     }
 }

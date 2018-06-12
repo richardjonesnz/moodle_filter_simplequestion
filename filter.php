@@ -41,40 +41,43 @@ class filter_simplequestion extends moodle_text_filter {
      * @param array $options filter options
      * @return string text after processing
      */
-    function filter($text, array $options = array()) {
+    public function filter($text, array $options = array()) {
         global $PAGE;
 
-        // Basic test to avoid work
+        // Basic test to avoid work.
         if (!is_string($text)) {
-            // non string data can not be filtered anyway
+            // Non string data can not be filtered anyway.
             return $text;
         }
+        /*
+        Admin might need to change these at some point - eg to double curlies,
+        therefore defined in {@link settings.php} with default values
+        */
+        $defconfig = get_config('filter_simplequestion');
+        $starttag = $defconfig->starttag;
+        $endtag = $defconfig->endtag;
+        $linktextlimit = $defconfig->linklimit;
+        $key = $defconfig->key;
 
-        // Admin might need to change these at some point - eg to double curlies,
-        // therefore defined in {@link settings.php} with default values
-        $def_config = get_config('filter_simplequestion');
-        $starttag = $def_config->starttag;
-        $endtag = $def_config->endtag;
-        $linktextlimit = $def_config->linklimit;
-        $key = $def_config->key;
-
-        // Do a quick check to see if we have a tag
+        // Do a quick check to see if we have a tag.
         if (strpos($text, $starttag) === false) {
             return $text;
         }
 
         $renderer = $PAGE->get_renderer('filter_simplequestion');
-        // Check our context and get the course id
+        // Check our context and get the course id.
         $coursectx = $this->context->get_course_context(false);
         if (!$coursectx) {
             return $text;
         }
         $courseid = $coursectx->instanceid;
-
-        // There may be a question or questions in here somewhere so continue
-        // Get the question numbers and positions in the text and call the
-        // renderer to deal with them
-        $text = filter_simplequestion_insert_questions($text, $starttag, $endtag, $linktextlimit, $renderer, $key, $courseid);
+        /*
+        There may be a question or questions in here somewhere so continue
+        Get the question numbers and positions in the text and call the
+        renderer to deal with them
+        */
+        $text = filter_simplequestion_insert_questions($text, $starttag,
+                $endtag, $linktextlimit, $renderer, $key, $courseid);
         return $text;
     }
 }
@@ -91,21 +94,22 @@ class filter_simplequestion extends moodle_text_filter {
  * @param int $courseid id of course text is in
  * @return a replacement text string
  */
-function filter_simplequestion_insert_questions($str, $needle, $limit, $linktextlimit,
-        $renderer, $key, $courseid) {
+function filter_simplequestion_insert_questions($str, $needle, $limit,
+        $linktextlimit, $renderer, $key, $courseid) {
 
     $newstring = $str;
-    // While we have the start tag in the text
+    // While we have the start tag in the text.
     while (strpos($newstring, $needle) !== false) {
         $initpos = strpos($newstring, $needle);
         if ($initpos !== false) {
-            $pos = $initpos + strlen($needle);  // get up to string
+            $pos = $initpos + strlen($needle);  // Get up to string.
             $endpos = strpos($newstring, $limit);
-            $data = substr($newstring, $pos, $endpos - $pos); // extract question data
-            // Get the parameters
+            // Extract question data.
+            $data = substr($newstring, $pos, $endpos - $pos);
+            // Get the parameters.
             $params = explode('|', $data);
 
-            // Run some checks - errors are returned if required
+            // Run some checks - errors are returned if required.
             $verified = true;
 
             if (count($params) == 3 ) {
@@ -114,36 +118,39 @@ function filter_simplequestion_insert_questions($str, $needle, $limit, $linktext
                 $number = $params[1];
                 $popup = trim($params[2]);
 
-                // Clean the text strings
+                // Clean the text strings.
                 $linktext = filter_var($linktext, FILTER_SANITIZE_STRING);
                 $popup = filter_var($popup, FILTER_SANITIZE_STRING);
 
             } else {
 
-                // Invalid parameter count
-                $question = get_string('param_number_error', 'filter_simplequestion');
+                // Invalid parameter count.
+                $question = get_string('param_number_error',
+                        'filter_simplequestion');
                 $verified = false;
             }
 
             if ($verified) {
-                // Check the display mode
+                // Check the display mode.
                 if ( ($popup != 'embed') && ($popup != 'popup') ) {
-                    // Invalid display mode
-                    $question = get_string('pop_param_error', 'filter_simplequestion');
+                    // Invalid display mode.
+                    $question = get_string('pop_param_error',
+                            'filter_simplequestion');
                     $verified = false;
                 }
             }
 
             if ($verified) {
-                // Check the number (must be integer)
+                // Check the number (must be integer).
                 if (filter_var($number, FILTER_VALIDATE_INT) === false) {
-                    // Invalid number string
-                    $question = get_string('link_number_error', 'filter_simplequestion');
+                    // Invalid number string.
+                    $question = get_string('link_number_error',
+                            'filter_simplequestion');
                     $verified = false;
                 }
             }
 
-            // Check the link text for length
+            // Check the link text for length.
             if ($verified) {
                 if (strlen($linktext) > $linktextlimit) {
                     $question = $linktext . get_string('link_text_length',
@@ -153,15 +160,17 @@ function filter_simplequestion_insert_questions($str, $needle, $limit, $linktext
             }
 
             if ($verified) {
-                // Render the question link
-                // Encrypt question number
-                $en = \filter_simplequestion\utility\tools::encrypt($number, $key);
-                $question = $renderer->get_question($en, $linktext, $popup, $courseid);
+                // Render the question link.
+                // Encrypt question number.
+                $en = \filter_simplequestion\utility\tools::encrypt($number,
+                        $key);
+                $question = $renderer->get_question($en, $linktext, $popup,
+                        $courseid);
             } else {
                 $question = $renderer->get_error($question);
             }
 
-            // Update the text to replace the filtered string
+            // Update the text to replace the filtered string.
             $newstring = substr_replace($newstring, $question, $initpos,
                     $endpos - $initpos + strlen($limit));
             $initpos = $endpos + strlen($limit);

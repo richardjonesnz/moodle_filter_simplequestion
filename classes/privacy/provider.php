@@ -15,21 +15,27 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details
- *
+ * GDPR privacy provider.
  * @package    filter
  * @subpackage simplequestion
  * @copyright  2017 Richard Jones (https://richardnz.net/)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
  */
 
+namespace filter_simplequestion\privacy;
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2018061200;
-$plugin->requires  = 2016052300;
-$plugin->component = 'filter_simplequestion';
-$plugin->maturity = MATURITY_BETA;
-// Upgrade to Moodle 3.5 inc GDPR.
-// Cleaning usages cron task updated.
-$plugin->release = 'v1.5.4';
+class provider implements
+    // This plugin does not store any personal user data.
+    \core_privacy\local\metadata\null_provider {
+
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return  string
+     */
+    public static function get_reason() : string {
+        return 'privacy:metadata';
+    }
+}

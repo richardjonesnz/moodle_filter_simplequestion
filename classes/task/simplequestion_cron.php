@@ -24,6 +24,7 @@
  *
  */
 namespace filter_simplequestion\task;
+defined('MOODLE_INTERNAL') || die();
 /**
  * This class controls the cleanup of unwanted entries in table question_usages
  *
@@ -43,29 +44,61 @@ class simplequestion_cron extends \core\task\scheduled_task {
      */
     public function execute() {
         global $DB;
-        // We delete simplequestion previews periodically via cron. 
-        // They don't contain anything of value as we are not tracking responses
-        // or attempt results beyond the immediate feedback.
+        /*
+        We delete simplequestion previews periodically via cron.
+        They don't contain anything of value as we are not tracking responses or attempt results beyond the immediate feedback.
+        */
         $component = 'filter_simplequestion';
         $behaviour = 'immediatefeedback';
 
-        $count = $DB->count_records('question_usages', 
-                   array('component'=>$component, 'preferredbehaviour'=>$behaviour));
-      
-       if ($count > 0) {
-           // get the usage id's
-           $qubaids = $DB->get_records('question_usages', 
-                   array('component'=>$component, 'preferredbehaviour'=>$behaviour));
+        // Do we have any of our component's usages in the table?
+        $count = $DB->count_records('question_usages',
+                array('component' => $component,
+                'preferredbehaviour' => $behaviour));
 
-           // delete from attempts
-           foreach ($qubaids as $qubaid) {
-               $DB->delete_records('question_attempts',
-                   array('questionusageid'=>$qubaid->id, 'behaviour'=>$behaviour));    
-           }
-           // delete the usages
-           $DB->delete_records('question_usages',
-                   array('component'=>$component, 'preferredbehaviour'=>$behaviour));
-       }
-       return true;
-  }
+        if ($count == 0) {
+            return;
+        }
+
+        // Get the usage id's.
+        $qubas = $DB->get_records('question_usages',
+               array('component' => $component,
+               'preferredbehaviour' => $behaviour));
+
+        // Attempts and steps.
+        foreach ($qubas as $quba) {
+            $count = $DB->count_records('question_attempts',
+                    array('questionusageid' => $quba->id));
+
+            if ($count > 0) {
+                // Get the attempt records.
+                $qats = $DB->get_records('question_attempts',
+                        array('questionusageid' => $quba->id));
+                // For each attempt, get the step records.
+                foreach ($qats as $qat) {
+                    $atsteps = $DB->get_records(
+                            'question_attempt_steps',
+                            array('questionattemptid' => $qat->id));
+                    // Delete the step data.
+                    foreach ($atsteps as $atstep) {
+                        // Delete the attempt_step_data.
+                        $DB->delete_records('question_attempt_step_data',
+                                array('attemptstepid' => $atstep->id));
+                    }
+                    // Now the attempt steps.
+                    $DB->delete_records('question_attempt_steps',
+                            array('questionattemptid' => $qat->id));
+                }
+            }
+            // And the attempts.
+            $DB->delete_records('question_attempts',
+                    array('questionusageid' => $quba->id));
+        }
+
+        // Delete the usages.
+        $DB->delete_records('question_usages',
+                array('component' => $component,
+                'preferredbehaviour' => $behaviour));
+        return true;
+    }
 }

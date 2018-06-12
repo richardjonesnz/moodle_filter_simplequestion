@@ -28,10 +28,10 @@ $string['answer_question'] = 'Submit answer';
 $string['previewquestion'] = 'Question: {$a}';
 $string['clean_up_usages'] = 'Clean old question usages for Insert question';
 
-// Settings strings
+// Settings strings.
 $string['settings_heading'] = 'Insert Question settings';
 $string['settings_desc'] = 'Change the settings for this filter. <br />
-        NOTE: If you change the start and end tags any existing uses will fail. 
+        NOTE: If you change the start and end tags any existing uses will fail.
         Set this up only when you first enable the filter!';
 $string['settings_start_tag'] = 'Start tag';
 $string['settings_end_tag'] = 'End tag';
@@ -46,15 +46,13 @@ $string['settings_displaymode_desc'] = "embedded in iFrame or popup window";
 $string['embed'] = 'embed';
 $string['popup'] = 'popup';
 
-// size of iframe
-//$string['size_settings_heading'] = 'iFrame settings';
-//$string['size_settings_desc'] = 'These only apply to embedded questions.';
+// Size of iframe.
 $string['settings_height'] = 'iFrame height (embedded)';
 $string['settings_height_desc'] = 'Enter whole number (pixels)';
 $string['settings_width'] = 'iFrame width (embedded)';
 $string['settings_width_desc'] = 'Enter whole number (pixels)';
 
-// errors
+// Errors.
 $string['friendlymessage'] = 'Programming error: could not review question';
 $string['questionidmismatch'] = 'Programming error: Question mismatch';
 $string['postsubmiterror'] = 'Programming error: Could not review question';
@@ -65,6 +63,9 @@ $string['link_text_error'] = 'Invalid characters in link';
 $string['link_number_error'] = 'Please check your question id';
 $string['unknown_error'] = 'Unknown error - bad format?';
 
-//Question form controls
+// Question form controls.
 $string['click_link'] = "Click the question link again to close frame";
 $string['use_close'] = "Close the window to return to your course";
+
+// Privacy - null provider reason.
+$string['privacy:metadata'] = 'The Simplequestion filter does not permanently store any user answer or other user data. Question attempts contain a user id but this is removed every 10 minutes or by running the Insert question scheduled task.';
